@@ -1,0 +1,10 @@
+event_date,visitor_id,page_name,ab_test_campaign,ab_test_variant,device_type,car_make
+5/25/16 09:01,abc123,main,ui_change,A,iphone,BMW
+5/25/16 11:02,abx245,main,ui_change,B,iphone,Volvo
+5/25/16 11:30,abc123,offers,ui_change,A,iphone,BMW
+5/25/16 12:15,cdf562,main,ui_change,A,iphone,BMW
+5/25/16 12:25,gsh3214,main,,,iphone,BMW
+5/25/16 12:30,sga231,main,ui_change,B,iphone,Audi
+5/25/16 12:40,pqi5679,offers,,,Mac,Volvo
+5/25/16 12:44,gfa123,car_selection,,,Android,Tesla
+
