@@ -32,4 +32,48 @@ For your implementations you need at least a Mapper and Reducer java files. Assu
 
 input is in HDFS folders with multiple csv files (with millions of rows each)
 
-Please submit the java files (and any other files that might be part of your solution)
+Please submit the java files (and any other files that might be part of your solution)  
+
+How to run:  
+My solution was developed on Cloudera's QuickStart Single Node Hadoop VM on VirtualBox. To run my solution, you would have to be in the vm (http://www.cloudera.com/downloads/quickstart_vms/5-7.html) and navigate to the /TrueCarMapReduceChallenge directory and run ./true_car. I have included a make file with some commands for convenience. TrueCar.java includes a Mapper and Reducer that reads from a csv formatted file and returns the Day, ab_test_campaign, ab_test_variant, and number of pages views in output/map_reduce_output_data.csv.
+
+run: jar
+	hadoop fs -rm -f -r  /user/cloudera/truecar/output
+	hadoop jar truecar.jar org.myorg.TrueCar /user/cloudera/truecar/input /user/cloudera/truecar/output
+
+run_caseSensitive: jar
+	hadoop fs -rm -f -r  /user/cloudera/truecar/output
+	hadoop jar truecar.jar org.myorg.TrueCar -Dtruecar.case.sensitive=true /user/cloudera/truecar/input /user/cloudera/truecar/output 
+
+run_stopwords: jar stopwords
+	hadoop fs -rm -f -r  /user/cloudera/truecar/output
+	hadoop jar truecar.jar org.myorg.TrueCar /user/cloudera/truecar/input /user/cloudera/truecar/output -skip /user/cloudera/truecar/stop_words.text
+
+compile: build/org/myorg/TrueCar.class
+
+jar: truecar.jar
+
+truecar.jar: build/org/myorg/TrueCar.class
+	jar -cvf truecar.jar -C build/ .
+
+build/org/myorg/TrueCar.class: TrueCar.java
+	mkdir -p build
+	javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* TrueCar.java -d build -Xlint
+
+clean:
+	rm -rf build truecar.jar
+
+data:
+	hadoop fs -rm -f -r /user/cloudera/truecar/input
+	hadoop fs -mkdir /user/cloudera/truecar
+	hadoop fs -mkdir /user/cloudera/truecar/input
+	hadoop fs -put map_reduce_input_data.csv /user/cloudera/wordcount/input
+
+showResult:
+	hadoop fs -cat /user/cloudera/truecar/output/*
+	
+stopwords:
+	hadoop fs -rm -f /user/cloudera/truecar/stop_words.text
+	echo -e "a\\nan\\nand\\nbut\\nis\\nor\\nthe\\nto\\n.\\n," >stop_words.text
+	hadoop fs -put stop_words.text /user/cloudera/truecar/
+
